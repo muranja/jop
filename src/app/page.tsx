@@ -44,69 +44,69 @@ export default function Home() {
   return (
     <main className="h-screen bg-[#000000] text-[#ffffff] flex flex-col font-sans overflow-hidden">
       
-      {/* Mega Header: High Contrast & MASSIVE */}
-      <header className="h-40 px-20 flex items-center justify-between border-b border-white/10 bg-black z-50 shadow-2xl">
-        <div className="flex items-center gap-32">
-           <div className="flex items-center gap-12 group cursor-pointer">
-              <div className="bg-red-600 p-6 rounded-[2.5rem] shadow-[0_0_100px_rgba(255,0,0,0.7)] group-hover:scale-110 transition-transform">
-                 <TrendingUp size={64} className="text-white" />
+      {/* Mega Header: Titan Scale & High Contrast */}
+      <header className="h-48 px-24 flex items-center justify-between border-b-[2px] border-white/20 bg-black z-50 shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
+        <div className="flex items-center gap-40">
+           <div className="flex items-center gap-16 group cursor-pointer">
+              <div className="bg-[#ff0000] p-8 rounded-[3rem] shadow-[0_0_120px_rgba(255,0,0,0.8)] group-hover:scale-110 transition-transform">
+                 <TrendingUp size={80} className="text-white" />
               </div>
-              <h1 className="text-8xl font-black italic tracking-tighter uppercase whitespace-nowrap leading-none">
+              <h1 className="text-9xl font-black italic tracking-tighter uppercase whitespace-nowrap leading-none">
                 MAXI<span className="text-white/20">PESA</span>
               </h1>
            </div>
            
-           <nav className="hidden 2xl:flex gap-20 items-center text-[22px] font-black uppercase tracking-[0.6em] text-white/30">
-              <a href="#" className="text-white border-b-[10px] border-red-600 pb-6">Aviator</a>
-              <a href="#" className="hover:text-white transition-colors">Fairness</a>
-              <a href="#" className="hover:text-white transition-colors">Vault</a>
+           <nav className="hidden 2xl:flex gap-24 items-center text-[28px] font-black uppercase tracking-[0.7em] text-white/30">
+              <a href="#" className="text-white border-b-[12px] border-[#ff0000] pb-8">Aviator</a>
+              <a href="#" className="hover:text-[#ff0000] transition-colors">Fairness</a>
+              <a href="#" className="hover:text-[#ff0000] transition-colors">Quantum</a>
            </nav>
         </div>
 
-        <div className="flex items-center gap-20">
-           {/* Mega Balance Widget */}
-           <div className="bg-[#0a0a0a] px-20 py-10 rounded-[4rem] border border-white/10 flex items-center gap-20 shadow-tactile">
+        <div className="flex items-center gap-24">
+           {/* Titan Balance Widget */}
+           <div className="bg-[#050505] px-24 py-12 rounded-[5rem] border border-white/20 flex items-center gap-24 shadow-tactile">
               <div className="flex flex-col">
-                 <span className="text-[18px] font-black text-white/20 tracking-[0.6em] uppercase mb-3 italic">Vault Balance</span>
-                 <span className="text-7xl font-black text-white leading-none">12,500.00 KES</span>
+                 <span className="text-[22px] font-black text-white/20 tracking-[0.8em] uppercase mb-4 italic">Sovereign Vault</span>
+                 <span className="text-8xl font-black text-[#00ff22] leading-none drop-shadow-[0_0_30px_rgba(0,255,34,0.3)]">12,500.00 KES</span>
               </div>
-              <div className="h-24 w-[2px] bg-white/20" />
-              <button className="text-[28px] font-black text-red-600 uppercase tracking-[0.3em] hover:text-red-500 transition-all hover:scale-110 active:scale-95 italic">Deposit</button>
+              <div className="h-28 w-[3px] bg-white/20" />
+              <button className="text-[34px] font-black text-[#ff0000] uppercase tracking-[0.4em] hover:text-[#ff3333] transition-all hover:scale-110 active:scale-95 italic">Deposit</button>
            </div>
            
-           <div className="bg-[#0a0a0a] p-10 rounded-[2.5rem] border border-white/10 text-white hover:bg-white/10 cursor-pointer transition-all shadow-lg">
-              <Menu size={56} />
+           <div className="bg-[#0a0a0a] p-12 rounded-[3rem] border border-white/20 text-white hover:bg-white/10 cursor-pointer transition-all shadow-lg">
+              <Menu size={72} />
            </div>
         </div>
       </header>
 
-      {/* Main Grid: Aggressively Scaled */}
-      <div className="flex-1 flex overflow-hidden p-6 gap-6">
+      {/* Main Grid: Titan Layout */}
+      <div className="flex-1 flex overflow-hidden p-8 gap-8 bg-[#000000]">
         
-        {/* Left: MASSIVE Global Feed */}
-        <aside className="w-[650px] bg-[#0a0a0a] rounded-[5rem] border border-white/10 flex flex-col overflow-hidden shadow-2xl">
-          <div className="p-16 flex gap-24 text-[22px] font-black uppercase tracking-[0.5em] border-b border-white/5 bg-black/50">
-            <span className="text-white border-b-8 border-red-600 pb-16 -mb-[68px] cursor-pointer">Live Stream</span>
-            <span className="text-white/10 hover:text-white/30 cursor-pointer">Jackpots</span>
+        {/* Left: TITAN Global Feed */}
+        <aside className="w-[720px] bg-[#050505] rounded-[6rem] border border-white/20 flex flex-col overflow-hidden shadow-2xl">
+          <div className="p-20 flex gap-32 text-[28px] font-black uppercase tracking-[0.6em] border-b border-white/10 bg-black/50">
+            <span className="text-white border-b-[10px] border-[#ff0000] pb-20 -mb-[90px] cursor-pointer">Live Pulse</span>
+            <span className="text-white/10 hover:text-white/40 cursor-pointer">Hall of Fame</span>
           </div>
           
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-12 bg-black/20">
-             <div className="space-y-6">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-16 bg-black/30">
+             <div className="space-y-8">
                 {[...Array(20)].map((_, i) => (
                    <motion.div 
                       key={i} 
-                      className="flex items-center justify-between p-10 rounded-[3rem] bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] transition-all shadow-lg"
+                      className="flex items-center justify-between p-12 rounded-[4rem] bg-white/[0.04] border border-white/10 hover:bg-white/[0.1] transition-all shadow-xl"
                    >
-                      <div className="flex items-center gap-8">
-                         <div className="w-20 h-20 bg-zinc-800 rounded-3xl flex items-center justify-center text-white/40"><User size={40} /></div>
-                         <div className="flex flex-col gap-2">
-                            <span className="text-3xl font-black text-white italic">{['Warrior', 'King', 'Ghost', 'Ace'][i % 4]}_{Math.floor(Math.random() * 999)}</span>
-                            <span className="text-[16px] font-bold text-white/20 uppercase tracking-[0.5em] leading-none">BET 1,000 KES</span>
+                      <div className="flex items-center gap-10">
+                         <div className="w-24 h-24 bg-zinc-800 rounded-[2rem] flex items-center justify-center text-white/40 shadow-inner"><User size={48} /></div>
+                         <div className="flex flex-col gap-3">
+                            <span className="text-4xl font-black text-white italic tracking-tighter">{['Warrior', 'Phoenix', 'Ghost', 'Ace'][i % 4]}_{Math.floor(Math.random() * 999)}</span>
+                            <span className="text-[18px] font-bold text-white/30 uppercase tracking-[0.6em] leading-none italic">BET 1,000 KES</span>
                          </div>
                       </div>
-                      <div className="text-right flex flex-col items-end">
-                         <span className="text-4xl font-black text-green-500 italic leading-none">+1,450</span>
-                         <span className="text-[14px] font-black text-green-500/30 uppercase tracking-[0.4em]">1.45x</span>
+                      <div className="text-right flex flex-col items-end gap-2">
+                         <span className="text-5xl font-black text-[#00ff22] italic leading-none drop-shadow-[0_0_20px_rgba(0,255,34,0.4)]">+1,450</span>
+                         <span className="text-[16px] font-black text-[#00ff22]/40 uppercase tracking-[0.5em] italic">1.45x Gain</span>
                       </div>
                    </motion.div>
                 ))}
@@ -114,19 +114,19 @@ export default function Home() {
           </div>
         </aside>
 
-        {/* Center: Hero Area */}
-        <div className="flex-1 flex flex-col gap-6 overflow-hidden">
+        {/* Center Hero Stage Area */}
+        <div className="flex-1 flex flex-col gap-8 overflow-hidden">
            
-           {/* Narrative Bar: High Saturated Large Pills */}
-           <div className="h-32 bg-black/70 rounded-[4rem] border border-white/10 flex items-center px-20 gap-8 overflow-x-auto no-scrollbar justify-end shadow-inner">
-              <History size={48} className="text-white/20 mr-12" />
+           {/* Narrative Bar: Legendary Scaled Vibrant Pills */}
+           <div className="h-40 bg-black/80 rounded-[5rem] border border-white/20 flex items-center px-24 gap-10 overflow-x-auto no-scrollbar justify-end shadow-[inset_0_4px_40px_rgba(0,0,0,0.6)]">
+              <History size={64} className="text-white/20 mr-16" />
               {history.map((val, i) => (
                  <motion.div 
                     key={i} 
-                    className={`px-14 py-7 rounded-full text-[24px] font-black italic tracking-widest border transition-all whitespace-nowrap shadow-2xl
-                        ${parseFloat(val) < 2 ? 'bg-zinc-900 border-white/10 text-white/30' : 
-                          parseFloat(val) >= 10 ? 'bg-amber-400/20 text-amber-500 border-amber-400/60 shadow-[0_0_30px_rgba(255,196,0,0.4)]' : 
-                          'bg-green-500/20 text-green-500 border-green-500/60 shadow-[0_0_30px_rgba(0,255,34,0.4)]'}`}
+                    className={`px-16 py-8 rounded-[3rem] text-[32px] font-black italic tracking-tighter border transition-all whitespace-nowrap shadow-2xl
+                        ${parseFloat(val) < 2 ? 'bg-zinc-900/50 border-white/10 text-white/30 shadow-none' : 
+                          parseFloat(val) >= 10 ? 'bg-[#ffc400]/20 text-[#ffc400] border-[#ffc400]/80 shadow-[0_0_60px_rgba(255,196,0,0.6)]' : 
+                          'bg-[#00ff22]/20 text-[#00ff22] border-[#00ff22]/80 shadow-[0_0_60px_rgba(0,255,34,0.6)]'}`}
                  >
                     {val}x
                  </motion.div>
