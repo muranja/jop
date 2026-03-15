@@ -157,9 +157,11 @@ export default function GameCanvas({
                initial={{ scale: 0.8, opacity: 0 }}
                animate={{ scale: 1, opacity: 1 }}
                className={`text-[18rem] leading-none font-black italic tracking-tighter transition-all duration-300 drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)]
-                  ${isCrashed ? 'text-red-600 scale-90 blur-[4px]' : 'text-white scale-100'}
-                  ${multiplierNum >= 10 && !isCrashed ? 'text-amber-400 drop-shadow-[0_0_80px_rgba(255,196,0,0.6)]' : ''}
-                  ${multiplierNum >= 2 && multiplierNum < 10 && !isCrashed ? 'text-green-500 drop-shadow-[0_0_80px_rgba(0,255,34,0.4)]' : ''}
+                  ${isCrashed ? 'text-red-600 scale-90 blur-[4px]' : 
+                    (multiplierNum >= 10 ? 'text-amber-400 drop-shadow-[0_0_100px_rgba(255,196,0,1)]' : 
+                     multiplierNum >= 2 ? 'text-green-500 drop-shadow-[0_0_100px_rgba(0,255,34,0.8)]' : 
+                     'text-white')
+                  }
             `}>
               {multiplier}<span className="text-8xl ml-6">x</span>
             </motion.h2>
