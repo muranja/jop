@@ -3,29 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --primary-red: #d90429;
-  --primary-green: #2ecc71;
-  --surface: #0a0a0a;
-  --surface-alt: #1a1a1b;
+  /* Backgrounds: Deep, immersive dark tones */
+  --bg-base: #09090B; 
+  --bg-panel: #18181B; 
+  
+  /* Action Colors: Win/Go signals */
+  --action-green: #22C55E; 
+  --action-green-glow: rgba(34, 197,  green-glow);
+
+  /* Tension Colors: Danger/Crash signals */
+  --danger-red: #EF4444; 
+  --danger-red-glow: rgba(239, 68, 68, 0.4);
+
+  /* Typography & Accents */
+  --text-main: #FAFAFA;
+  --text-muted: #A1A1AA;
+  --accent-gold: #F59E0B; 
+  --accent-gold-glow: rgba(245, 158, 11, 0.4);
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--bg-base);
+  color: var(--text-main);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow: hidden;
 }
 
-/* Maxi Pesa Styles */
-.bg-maxi-red { background-color: #d90429; }
-.text-maxi-red { color: #d90429; }
-.bg-maxi-green { background-color: #27ae60; }
-.border-maxi-red { border-color: #d90429; }
-
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 2px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
@@ -36,21 +41,18 @@ body {
 }
 
 @layer utilities {
-  .animate-propeller {
-    animation: propeller-spin 2s linear infinite;
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 }
 
-@keyframes propeller-spin {
+@keyframes rotate-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes pulse-soft {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2s ease-in-out infinite;
+.animate-rotate-slow {
+  animation: rotate-slow 60s linear infinite;
 }

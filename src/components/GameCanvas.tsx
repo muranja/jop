@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface GameCanvasProps {
@@ -16,14 +16,109 @@ export default function GameCanvas({
   isWaiting, 
   nextRoundIn 
 }: GameCanvasProps) {
-  
-  return (
-    <div className="relative w-full h-full bg-[#050505] rounded-xl overflow-hidden border border-white/5 flex flex-col items-center justify-center">
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const multiplierNum = parseFloat(multiplier);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    const trail: { x: number; y: number; alpha: number }[] = [];
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (isWaiting) {
+         // Optionally draw something for waiting state on canvas
+         return;
+      }
+
+      // Parabolic Curve Logic: X moves as multiplier grows, Y curves upward exponentially
+      // We scale the multiplier to canvas dimensions
+      const progress = Math.max(0, multiplierNum - 1);
+      const planeX = Math.min(canvas.width * 0.8, progress * 80 + 50); 
+      const planeY = canvas.height - Math.min(canvas.height * 0.8, Math.pow(multiplierNum, 1.8) * 15 + 50);
+
+      // 1. Draw Mesh/Grid (Static-ish)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < canvas.width; i += 50) {
+        ctx.beginPath();ctx.moveTo(i, 0);ctx.lineTo(i, canvas.height);ctx.stroke();
+      }
+      for (let i = 0; i < canvas.height; i += 50) {
+        ctx.beginPath();ctx.moveTo(0, i);ctx.lineTo(canvas.width, i);ctx.stroke();
+      }
+
+      // 2. Draw the Particle Trail
+      if (!isCrashed) {
+        trail.push({ x: planeX, y: planeY, alpha: 1 });
+      }
       
-      {/* Background Rays (Subtle) */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] bg-[repeating-conic-gradient(from_0deg,#ffffff_0deg_10deg,transparent_10deg_20deg)] animate-propeller" />
+      ctx.beginPath();
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)'; // Gold-like trail
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      
+      for (let i = 0; i < trail.length; i++) {
+        const p = trail[i];
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+        p.alpha -= 0.01;
+      }
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset
+
+      if (trail.length > 100) trail.shift();
+
+      // 3. Draw the Plane
+      if (!isCrashed) {
+        ctx.fillStyle = multiplierNum > 10 ? '#F59E0B' : '#EF4444'; // Gold if high multiplier
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = ctx.fillStyle as string;
+        
+        ctx.beginPath();
+        // Drawing a simple plane-like shape or triangle
+        ctx.moveTo(planeX, planeY);
+        ctx.lineTo(planeX - 30, planeY + 10);
+        ctx.lineTo(planeX - 25, planeY - 5);
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.shadowBlur = 0; // Reset shadow
+      } else {
+        // Draw explosion dot at crash point
+        ctx.fillStyle = '#EF4444';
+        ctx.beginPath();
+        const lastP = trail[trail.length - 1] || { x: planeX, y: planeY };
+        ctx.arc(lastP.x, lastP.y, 10, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [multiplierNum, isCrashed, isWaiting]);
+
+  return (
+    <div className="relative w-full h-full bg-[#09090B] rounded-2xl overflow-hidden border border-white/5 shadow-2xl flex flex-col items-center justify-center">
+      
+      {/* Background Ambience */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[repeating-conic-gradient(from_0deg,rgba(255,255,255,0.05)_0deg_20deg,transparent_20deg_40deg)] animate-rotate-slow" />
       </div>
+
+      <canvas 
+        ref={canvasRef} 
+        width={1000} 
+        height={600} 
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
       <AnimatePresence mode="wait">
         {isWaiting ? (
@@ -32,54 +127,39 @@ export default function GameCanvas({
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1 }}
-            className="relative flex flex-col items-center gap-8"
+            className="z-20 relative flex flex-col items-center gap-6"
           >
-            {/* Propeller Animation */}
-            <div className="relative w-32 h-32">
-               <motion.div 
-                  className="absolute inset-0 border-4 border-red-600 rounded-full border-t-transparent animate-propeller"
-               />
-               <div className="absolute inset-4 border-2 border-red-600/30 rounded-full" />
-               <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-4 h-4 bg-red-600 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.5)]" />
-               </div>
+            <div className="w-24 h-24 border-4 border-red-500 border-t-transparent rounded-full animate-spin flex items-center justify-center">
+               <div className="w-12 h-1 bg-red-500" />
             </div>
-
-            <h2 className="text-4xl font-black text-white italic tracking-tighter">
+            <h2 className="text-3xl font-black text-white italic tracking-tighter drop-shadow-lg">
               WAITING FOR NEXT ROUND...
             </h2>
           </motion.div>
         ) : (
-          <motion.div 
-            key="flight"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="relative w-full h-full flex items-center justify-center"
-          >
-            {/* Red Plane SVG at Bottom Left */}
-            <div className="absolute bottom-12 left-12">
-               <svg width="120" height="60" viewBox="0 0 120 60" className="text-red-600 drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]">
-                  <path d="M10 40 L110 40 L115 30 L105 20 L40 20 L30 10 L10 10 Z" fill="currentColor" stroke="white" strokeWidth="2" />
-                  <circle cx="110" cy="35" r="5" fill="white" />
-                  <rect x="5" y="38" width="10" height="4" fill="white" />
-               </svg>
-            </div>
-
-            {/* Large Multiplier Display */}
-            <div className="text-center z-10">
-              <h2 className={`text-[10rem] font-black italic tracking-tighter ${isCrashed ? 'text-red-500' : 'text-white'}`}>
-                {multiplier}<span className="text-4xl">x</span>
-              </h2>
-              <p className="text-white/20 text-xs font-black uppercase tracking-[0.5em] -mt-4">
-                {isCrashed ? 'FLEW AWAY!' : 'CURRENT MULTIPLIER'}
-              </p>
-            </div>
-          </motion.div>
+          <div className="z-20 pointer-events-none flex flex-col items-center">
+            <h2 className={`text-[12rem] leading-none font-black italic tracking-tighter drop-shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-colors duration-300 ${isCrashed ? 'text-red-500' : 'text-white'}`}>
+              {multiplier}<span className="text-5xl ml-2">x</span>
+            </h2>
+            {isCrashed && (
+              <motion.div 
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 10 }}
+                className="bg-red-600 px-6 py-2 rounded-xl text-2xl font-black italic shadow-2xl -mt-8"
+              >
+                FLEW AWAY!
+              </motion.div>
+            )}
+          </div>
         )}
       </AnimatePresence>
 
-      <div className="absolute bottom-4 right-8 text-[10px] font-black text-white/10 uppercase tracking-widest">
-         ROUND ID: #137CF9
+      <div className="absolute bottom-6 left-12 z-30 p-4 rounded-xl bg-black/40 backdrop-blur-sm border border-white/5">
+        <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-white/40">
+           <span>MAXI PESA PRO</span>
+           <div className="w-1 h-1 bg-white/20 rounded-full" />
+           <span>#PROVABLY_FAIR</span>
+        </div>
       </div>
     </div>
   );
