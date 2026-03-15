@@ -5,7 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import GameCanvas from '@/components/GameCanvas';
 import WalletDashboard from '@/components/WalletDashboard';
 import BettingPanel from '@/components/BettingPanel';
-import { Menu, User, MessageCircle, Send, TrendingUp, History, Bell } from 'lucide-react';
+import { Menu, User, MessageCircle, Send, TrendingUp, History, Bell, Users } from 'lucide-react';
 
 export default function Home() {
   const [multiplier, setMultiplier] = useState('1.00');
@@ -139,9 +139,11 @@ export default function Home() {
            </div>
 
            {/* Interactive Betting Area */}
-           <div className="h-[280px] flex gap-1">
-              <BettingPanel multiplier={parseFloat(multiplier)} isFlying={status === 'IN_PROGRESS'} />
-              <BettingPanel multiplier={parseFloat(multiplier)} isFlying={status === 'IN_PROGRESS'} />
+           <div className="h-[300px] flex gap-1">
+              <BettingPanel 
+                gameState={status === 'IN_PROGRESS' || status === 'STARTING' ? 'FLYING' : status === 'CRASHED' ? 'CRASHED' : 'WAITING'} 
+                currentMultiplier={parseFloat(multiplier)} 
+              />
            </div>
         </div>
 
