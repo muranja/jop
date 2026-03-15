@@ -84,29 +84,29 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden p-8 gap-8 bg-[#000000]">
         
         {/* Left: TITAN Global Feed */}
-        <aside className="w-[720px] bg-[#050505] rounded-[6rem] border border-white/20 flex flex-col overflow-hidden shadow-2xl">
-          <div className="p-20 flex gap-32 text-[28px] font-black uppercase tracking-[0.6em] border-b border-white/10 bg-black/50">
-            <span className="text-white border-b-[10px] border-[#ff0000] pb-20 -mb-[90px] cursor-pointer">Live Pulse</span>
-            <span className="text-white/10 hover:text-white/40 cursor-pointer">Hall of Fame</span>
+        <aside className="w-[850px] bg-[#050505] rounded-[6.5rem] border border-white/30 flex flex-col overflow-hidden shadow-[0_0_150px_rgba(0,0,0,0.9)]">
+          <div className="p-24 flex gap-40 text-[32px] font-black uppercase tracking-[0.8em] border-b border-white/20 bg-black/60">
+            <span className="text-white border-b-[12px] border-[#ff0000] pb-24 -mb-[108px] cursor-pointer">Live Pulse</span>
+            <span className="text-white/10 hover:text-white/50 cursor-pointer">Jackpots</span>
           </div>
           
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-16 bg-black/30">
-             <div className="space-y-8">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-20 bg-black/40">
+             <div className="space-y-10">
                 {[...Array(20)].map((_, i) => (
                    <motion.div 
                       key={i} 
-                      className="flex items-center justify-between p-12 rounded-[4rem] bg-white/[0.04] border border-white/10 hover:bg-white/[0.1] transition-all shadow-xl"
+                      className="flex items-center justify-between p-14 rounded-[4.5rem] bg-white/[0.05] border-[2px] border-white/10 hover:bg-white/[0.12] transition-all shadow-2xl"
                    >
-                      <div className="flex items-center gap-10">
-                         <div className="w-24 h-24 bg-zinc-800 rounded-[2rem] flex items-center justify-center text-white/40 shadow-inner"><User size={48} /></div>
-                         <div className="flex flex-col gap-3">
-                            <span className="text-4xl font-black text-white italic tracking-tighter">{['Warrior', 'Phoenix', 'Ghost', 'Ace'][i % 4]}_{Math.floor(Math.random() * 999)}</span>
-                            <span className="text-[18px] font-bold text-white/30 uppercase tracking-[0.6em] leading-none italic">BET 1,000 KES</span>
+                      <div className="flex items-center gap-12">
+                         <div className="w-28 h-28 bg-zinc-900 rounded-[2.5rem] flex items-center justify-center text-white/50 shadow-inner border border-white/10"><User size={56} /></div>
+                         <div className="flex flex-col gap-4">
+                            <span className="text-5xl font-black text-white italic tracking-tighter uppercase">{['Warrior', 'Phoenix', 'Titan', 'Apex'][i % 4]}_{Math.floor(Math.random() * 999)}</span>
+                            <span className="text-[20px] font-bold text-[#00ff22]/60 uppercase tracking-[0.7em] leading-none italic">BET 5,000 KES</span>
                          </div>
                       </div>
-                      <div className="text-right flex flex-col items-end gap-2">
-                         <span className="text-5xl font-black text-[#00ff22] italic leading-none drop-shadow-[0_0_20px_rgba(0,255,34,0.4)]">+1,450</span>
-                         <span className="text-[16px] font-black text-[#00ff22]/40 uppercase tracking-[0.5em] italic">1.45x Gain</span>
+                      <div className="text-right flex flex-col items-end gap-3">
+                         <span className="text-6xl font-black text-[#00ff22] italic leading-none drop-shadow-[0_0_40px_#00ff22]">+15,450</span>
+                         <span className="text-[18px] font-black text-[#00ff22]/40 uppercase tracking-[0.6em] italic">WIN 3.10x</span>
                       </div>
                    </motion.div>
                 ))}
@@ -115,18 +115,23 @@ export default function Home() {
         </aside>
 
         {/* Center Hero Stage Area */}
-        <div className="flex-1 flex flex-col gap-8 overflow-hidden">
+        <div className="flex-1 flex flex-col gap-10 overflow-hidden">
            
            {/* Narrative Bar: Legendary Scaled Vibrant Pills */}
-           <div className="h-40 bg-black/80 rounded-[5rem] border border-white/20 flex items-center px-24 gap-10 overflow-x-auto no-scrollbar justify-end shadow-[inset_0_4px_40px_rgba(0,0,0,0.6)]">
-              <History size={64} className="text-white/20 mr-16" />
+           <div className="h-48 bg-black/95 rounded-[6rem] border border-white/30 flex items-center px-32 gap-12 overflow-x-auto no-scrollbar justify-end shadow-[inset_0_8px_60px_rgba(0,0,0,1)]">
+              <History size={80} className="text-white/20 mr-20" />
               {history.map((val, i) => (
                  <motion.div 
                     key={i} 
-                    className={`px-16 py-8 rounded-[3rem] text-[32px] font-black italic tracking-tighter border transition-all whitespace-nowrap shadow-2xl
-                        ${parseFloat(val) < 2 ? 'bg-zinc-900/50 border-white/10 text-white/30 shadow-none' : 
-                          parseFloat(val) >= 10 ? 'bg-[#ffc400]/20 text-[#ffc400] border-[#ffc400]/80 shadow-[0_0_60px_rgba(255,196,0,0.6)]' : 
-                          'bg-[#00ff22]/20 text-[#00ff22] border-[#00ff22]/80 shadow-[0_0_60px_rgba(0,255,34,0.6)]'}`}
+                    style={{
+                      backgroundColor: parseFloat(val) < 2 ? 'rgba(255,255,255,0.05)' : 
+                                     parseFloat(val) >= 10 ? 'rgba(255,196,0,0.3)' : 'rgba(0,255,34,0.3)',
+                      color: parseFloat(val) < 2 ? '#ffffff40' : 
+                             parseFloat(val) >= 10 ? '#ffc400' : '#00ff22',
+                      borderColor: parseFloat(val) < 2 ? '#ffffff20' : 
+                                   parseFloat(val) >= 10 ? '#ffc400' : '#00ff22'
+                    }}
+                    className="px-20 py-10 rounded-full text-[40px] font-black italic tracking-tighter border-[3px] transition-all whitespace-nowrap shadow-2xl"
                  >
                     {val}x
                  </motion.div>

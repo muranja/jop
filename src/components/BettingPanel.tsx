@@ -114,38 +114,41 @@ function SingleBetControl({ panelId, gameState, currentMultiplier }: { panelId: 
          </div>
 
          {/* Right Side: Massive Psycho-Action Button */}
-         <div className="flex-1 min-h-[220px]">
+         <div className="flex-1 min-h-[350px]">
             <button 
               onClick={handeBetAction}
               disabled={!isButtonEnabled}
-              className={`w-full h-full rounded-[4rem] flex flex-col items-center justify-center gap-8 transition-all duration-300 transform active:scale-95 group relative overflow-hidden border-t-[3px] border-white/40
-                ${!isButtonEnabled ? 'bg-[#151515] grayscale opacity-30 cursor-not-allowed' : 
-                  gameState === 'WAITING' ? 
-                    (bet.isActive ? 'bg-[#ff0000] shadow-[0_0_100px_#ff0000]' : 'bg-[#00ff22] shadow-[0_0_100px_#00ff22]') :
-                  gameState === 'FLYING' ? 
-                    (bet.isActive && !bet.isCashedOut ? 'bg-[#00ff22] animate-pulse text-black shadow-[0_0_150px_#00ff22] scale-105 border-transparent' : 'bg-[#222222] border-white/10 opacity-70') :
-                  'bg-[#222222]'
-                }
+              style={{
+                backgroundColor: !isButtonEnabled ? '#1a1a1a' : 
+                                 gameState === 'WAITING' ? (bet.isActive ? '#ff0000' : '#00ff22') :
+                                 gameState === 'FLYING' ? (bet.isActive && !bet.isCashedOut ? '#00ff22' : '#1a1a1a') : '#1a1a1a',
+                boxShadow: !isButtonEnabled ? 'none' :
+                           gameState === 'WAITING' ? (bet.isActive ? '0 0 120px #ff0000' : '0 0 120px #00ff22') :
+                           gameState === 'FLYING' && bet.isActive && !bet.isCashedOut ? '0 0 200px #00ff22' : 'none',
+                opacity: !isButtonEnabled ? 0.3 : 1
+              }}
+              className={`w-full h-full rounded-[5rem] flex flex-col items-center justify-center gap-10 transition-all duration-300 transform active:scale-95 group relative overflow-hidden border-t-[4px] border-white/40
+                 ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'scale-105 animate-pulse' : ''}
               `}
             >
                {/* Reflection/Plastic Finish */}
-               <div className="absolute top-0 left-0 w-full h-[70%] bg-gradient-to-b from-white/50 to-transparent pointer-events-none skew-x-[-20deg] translate-x-16 opacity-60" />
+               <div className="absolute top-0 left-0 w-full h-[75%] bg-gradient-to-b from-white/60 to-transparent pointer-events-none skew-x-[-25deg] translate-x-20 opacity-70" />
 
-               <span className={`text-[9rem] font-black italic tracking-tighter uppercase leading-[0.8] transition-transform group-hover:scale-110 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]
+               <span className={`text-[11rem] font-black italic tracking-tighter uppercase leading-[0.7] transition-transform group-hover:scale-110 drop-shadow-[0_15px_40px_rgba(0,0,0,0.9)]
                   ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-black' : 'text-white'}
                `}>
                  {gameState === 'FLYING' && bet.isActive && !bet.isCashedOut ? 'CASH\nOUT' : 
                   gameState === 'WAITING' ? (bet.isActive ? 'CANCEL' : 'PLACE\nBET') : 
-                  bet.isCashedOut ? 'WON!' : 'PLEASE\nWAIT'}
+                  bet.isCashedOut ? 'WON!' : 'ROUND\nOVER'}
                </span>
 
                <div className="flex flex-col items-center gap-2">
-                  <span className={`text-8xl font-black italic tracking-tighter drop-shadow-2xl leading-none
+                  <span className={`text-9xl font-black italic tracking-tighter drop-shadow-2xl leading-none
                      ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-black' : 'text-white'}
                   `}>
                     {gameState === 'FLYING' && bet.isActive && !bet.isCashedOut ? currentWin : `${parseFloat(bet.betAmount).toFixed(0)} KES`}
                   </span>
-                  <span className={`text-[18px] font-black uppercase tracking-[0.7em] opacity-80 italic
+                  <span className={`text-[22px] font-black uppercase tracking-[0.8em] opacity-90 italic
                      ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-black animate-bounce' : ''}
                   `}>Sovereign Simulation</span>
                </div>

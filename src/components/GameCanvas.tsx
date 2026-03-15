@@ -156,14 +156,18 @@ export default function GameCanvas({
                key={isCrashed ? 'crashed' : 'flying'}
                initial={{ scale: 0.8, opacity: 0 }}
                animate={{ scale: 1, opacity: 1 }}
-               className={`text-[24rem] leading-none font-black italic tracking-tighter transition-all duration-300
-                  ${isCrashed ? 'text-[#ff0000] drop-shadow-[0_0_100px_#ff0000] blur-sm' : 
-                    multiplierNum >= 10 ? 'text-[#ffc400] drop-shadow-[0_0_150px_#ffc400]' : 
-                    multiplierNum >= 2 ? 'text-[#00ff22] drop-shadow-[0_0_150px_#00ff22]' : 
-                    'text-white drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)]'}
-               `}
+               style={{
+                 color: isCrashed ? '#ff0000' : 
+                        multiplierNum >= 10 ? '#ffc400' : 
+                        multiplierNum >= 2 ? '#00ff22' : '#ffffff',
+                 textShadow: isCrashed ? '0 0 100px #ff0000' :
+                             multiplierNum >= 10 ? '0 0 150px #ffc400' :
+                             multiplierNum >= 2 ? '0 0 150px #00ff22' : '0 20px 60px rgba(0,0,0,0.9)',
+                 filter: isCrashed ? 'blur(8px)' : 'none'
+               }}
+               className="text-[32rem] leading-none font-black italic tracking-tighter transition-all duration-300 drop-shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
             >
-              {multiplier}<span className="text-9xl ml-6">x</span>
+              {multiplier}<span className="text-9xl ml-8">x</span>
             </motion.h2>
             
             {isCrashed && (
