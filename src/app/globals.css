@@ -2,35 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@700&display=swap');
+
 :root {
   /* Backgrounds: Deep, immersive dark tones */
-  --bg-base: #09090B; 
-  --bg-panel: #18181B; 
+  --bg-base: #020202; 
+  --bg-panel: #0d0d0d; 
   
   /* Action Colors: Win/Go signals */
-  --action-green: #22C55E; 
-  --action-green-glow: rgba(34, 197,  green-glow);
+  --action-green: #00ff66; /* Neon high-visibility green */
+  --action-green-glow: rgba(0, 255, 102, 0.4);
 
   /* Tension Colors: Danger/Crash signals */
-  --danger-red: #EF4444; 
-  --danger-red-glow: rgba(239, 68, 68, 0.4);
+  --danger-red: #ff0033; 
+  --danger-red-glow: rgba(255, 0, 51, 0.4);
 
   /* Typography & Accents */
-  --text-main: #FAFAFA;
-  --text-muted: #A1A1AA;
-  --accent-gold: #F59E0B; 
-  --accent-gold-glow: rgba(245, 158, 11, 0.4);
+  --text-main: #ffffff;
+  --text-muted: #888888;
+  --accent-gold: #ffcc00; 
+  --accent-gold-glow: rgba(255, 204, 0, 0.4);
 }
 
 body {
   background-color: var(--bg-base);
   color: var(--text-main);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, sans-serif;
   overflow: hidden;
 }
 
+.font-heading {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
-  width: 2px;
+  width: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
@@ -41,18 +47,22 @@ body {
 }
 
 @layer utilities {
-  .glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  .text-glow-green {
+    text-shadow: 0 0 20px var(--action-green-glow);
+  }
+  .text-glow-red {
+    text-shadow: 0 0 20px var(--danger-red-glow);
+  }
+  .text-glow-gold {
+    text-shadow: 0 0 20px var(--accent-gold-glow);
   }
 }
 
-@keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes pan-bg {
+  from { background-position: 0 0; }
+  to { background-position: -100px 100px; }
 }
 
-.animate-rotate-slow {
-  animation: rotate-slow 60s linear infinite;
+.animate-pan-bg {
+  animation: pan-bg 5s linear infinite;
 }

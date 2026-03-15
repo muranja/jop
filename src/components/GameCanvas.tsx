@@ -27,75 +27,83 @@ export default function GameCanvas({
 
     let animationFrameId: number;
     const trail: { x: number; y: number; alpha: number }[] = [];
+    let gridOffset = 0;
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // 1. Draw Panning Coordinate Grid (The Sense of Speed)
+      gridOffset = (gridOffset + (isCrashed ? 0 : Math.min(20, multiplierNum * 2))) % 50;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+
+      for (let i = -50; i < canvas.width + 50; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(i + gridOffset, 0);
+        ctx.lineTo(i + gridOffset - 200, canvas.height); // Skewed for perspective
+        ctx.stroke();
+      }
+      for (let i = -50; i < canvas.height + 50; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(0, i + gridOffset);
+        ctx.lineTo(canvas.width, i + gridOffset);
+        ctx.stroke();
+      }
+
       if (isWaiting) {
-         // Optionally draw something for waiting state on canvas
+         animationFrameId = requestAnimationFrame(render);
          return;
       }
 
-      // Parabolic Curve Logic: X moves as multiplier grows, Y curves upward exponentially
-      // We scale the multiplier to canvas dimensions
+      // Parabolic Curve Logic
       const progress = Math.max(0, multiplierNum - 1);
-      const planeX = Math.min(canvas.width * 0.8, progress * 80 + 50); 
-      const planeY = canvas.height - Math.min(canvas.height * 0.8, Math.pow(multiplierNum, 1.8) * 15 + 50);
+      const planeX = Math.min(canvas.width * 0.85, progress * 100 + 80); 
+      const planeY = canvas.height - Math.min(canvas.height * 0.85, Math.pow(multiplierNum, 1.7) * 20 + 100);
 
-      // 1. Draw Mesh/Grid (Static-ish)
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < canvas.width; i += 50) {
-        ctx.beginPath();ctx.moveTo(i, 0);ctx.lineTo(i, canvas.height);ctx.stroke();
-      }
-      for (let i = 0; i < canvas.height; i += 50) {
-        ctx.beginPath();ctx.moveTo(0, i);ctx.lineTo(canvas.width, i);ctx.stroke();
-      }
-
-      // 2. Draw the Particle Trail
+      // 2. Draw Particle Trail
       if (!isCrashed) {
         trail.push({ x: planeX, y: planeY, alpha: 1 });
       }
       
       ctx.beginPath();
-      ctx.setLineDash([5, 5]);
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)'; // Gold-like trail
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = multiplierNum > 10 ? '#ffcc00' : '#00ff66';
+      ctx.lineWidth = 6;
       ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
       
       for (let i = 0; i < trail.length; i++) {
         const p = trail[i];
         if (i === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
-        p.alpha -= 0.01;
+        p.alpha -= 0.005;
       }
       ctx.stroke();
-      ctx.setLineDash([]); // Reset
 
-      if (trail.length > 100) trail.shift();
+      if (trail.length > 150) trail.shift();
 
-      // 3. Draw the Plane
+      // 3. Draw High-Visibility Plane
       if (!isCrashed) {
-        ctx.fillStyle = multiplierNum > 10 ? '#F59E0B' : '#EF4444'; // Gold if high multiplier
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = ctx.fillStyle as string;
+        ctx.shadowBlur = 25;
+        ctx.shadowColor = multiplierNum > 10 ? '#ffcc00' : '#00ff66';
+        ctx.fillStyle = '#ffffff';
         
         ctx.beginPath();
-        // Drawing a simple plane-like shape or triangle
         ctx.moveTo(planeX, planeY);
-        ctx.lineTo(planeX - 30, planeY + 10);
-        ctx.lineTo(planeX - 25, planeY - 5);
+        ctx.lineTo(planeX - 40, planeY + 15);
+        ctx.lineTo(planeX - 35, planeY - 10);
         ctx.closePath();
         ctx.fill();
         
-        ctx.shadowBlur = 0; // Reset shadow
+        ctx.shadowBlur = 0;
       } else {
-        // Draw explosion dot at crash point
-        ctx.fillStyle = '#EF4444';
+        ctx.fillStyle = '#ff0033';
+        ctx.shadowBlur = 40;
+        ctx.shadowColor = '#ff0033';
         ctx.beginPath();
         const lastP = trail[trail.length - 1] || { x: planeX, y: planeY };
-        ctx.arc(lastP.x, lastP.y, 10, 0, Math.PI * 2);
+        ctx.arc(lastP.x, lastP.y, 15, 0, Math.PI * 2);
         ctx.fill();
+        ctx.shadowBlur = 0;
       }
 
       animationFrameId = requestAnimationFrame(render);
@@ -106,60 +114,74 @@ export default function GameCanvas({
   }, [multiplierNum, isCrashed, isWaiting]);
 
   return (
-    <div className="relative w-full h-full bg-[#09090B] rounded-2xl overflow-hidden border border-white/5 shadow-2xl flex flex-col items-center justify-center">
+    <div className="relative w-full h-full bg-[#020202] rounded-3xl overflow-hidden border border-white/5 flex flex-col items-center justify-center group">
       
-      {/* Background Ambience */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[repeating-conic-gradient(from_0deg,rgba(255,255,255,0.05)_0deg_20deg,transparent_20deg_40deg)] animate-rotate-slow" />
+      {/* Background Radial Glow */}
+      <div className={`absolute inset-0 transition-opacity duration-1000 ${isCrashed ? 'opacity-20' : 'opacity-10'}`}>
+         <div className={`absolute inset-0 bg-radial-at-center from-white/20 to-transparent ${isCrashed ? 'from-red-600' : ''}`} />
       </div>
 
       <canvas 
         ref={canvasRef} 
-        width={1000} 
-        height={600} 
-        className="absolute inset-0 w-full h-full object-cover"
+        width={1200} 
+        height={800} 
+        className="absolute inset-0 w-full h-full object-cover opacity-80"
       />
 
       <AnimatePresence mode="wait">
         {isWaiting ? (
           <motion.div 
             key="waiting"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            className="z-20 relative flex flex-col items-center gap-6"
+            exit={{ opacity: 0, scale: 1.2 }}
+            className="z-20 relative flex flex-col items-center gap-8"
           >
-            <div className="w-24 h-24 border-4 border-red-500 border-t-transparent rounded-full animate-spin flex items-center justify-center">
-               <div className="w-12 h-1 bg-red-500" />
+            <div className="relative w-32 h-32 flex items-center justify-center">
+               <div className="absolute inset-0 border-[6px] border-white/10 rounded-full" />
+               <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 border-[6px] border-red-600 border-t-transparent rounded-full"
+               />
+               <span className="text-4xl font-black text-red-600">!</span>
             </div>
-            <h2 className="text-3xl font-black text-white italic tracking-tighter drop-shadow-lg">
-              WAITING FOR NEXT ROUND...
+            <h2 className="text-4xl font-black text-white italic tracking-tighter text-center max-w-xs drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] uppercase">
+              Waiting for next round
             </h2>
           </motion.div>
         ) : (
           <div className="z-20 pointer-events-none flex flex-col items-center">
-            <h2 className={`text-[12rem] leading-none font-black italic tracking-tighter drop-shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-colors duration-300 ${isCrashed ? 'text-red-500' : 'text-white'}`}>
-              {multiplier}<span className="text-5xl ml-2">x</span>
+            <h2 className={`text-[13rem] leading-none font-black italic tracking-tighter transition-all duration-300 drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)]
+               ${isCrashed ? 'text-red-600 scale-95 blur-[2px]' : 'text-white scale-100'}
+               ${multiplierNum >= 10 && !isCrashed ? 'text-amber-400 drop-shadow-[0_0_50px_rgba(245,158,11,0.4)]' : ''}
+            `}>
+              {multiplier}<span className="text-6xl ml-4">x</span>
             </h2>
             {isCrashed && (
               <motion.div 
-                initial={{ scale: 0, rotate: -20 }}
-                animate={{ scale: 1, rotate: 10 }}
-                className="bg-red-600 px-6 py-2 rounded-xl text-2xl font-black italic shadow-2xl -mt-8"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="bg-red-600 px-8 py-3 rounded-2xl text-3xl font-black italic shadow-[0_10px_40px_rgba(239,68,68,0.4)] uppercase tracking-widest text-white -mt-10"
               >
-                FLEW AWAY!
+                Flew Away!
               </motion.div>
             )}
           </div>
         )}
       </AnimatePresence>
 
-      <div className="absolute bottom-6 left-12 z-30 p-4 rounded-xl bg-black/40 backdrop-blur-sm border border-white/5">
-        <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-white/40">
-           <span>MAXI PESA PRO</span>
-           <div className="w-1 h-1 bg-white/20 rounded-full" />
-           <span>#PROVABLY_FAIR</span>
-        </div>
+      {/* Decorative Bottom Left Info */}
+      <div className="absolute bottom-8 left-12 z-30 flex items-center gap-6">
+         <div className="flex flex-col">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-1">Status</span>
+            <div className="flex items-center gap-2">
+               <div className={`w-2 h-2 rounded-full ${isCrashed ? 'bg-red-600' : 'bg-green-500 animate-pulse'}`} />
+               <span className="text-xs font-black text-white italic uppercase tracking-tighter">
+                  {isCrashed ? 'Round Over' : isWaiting ? 'Betting Open' : 'In Flight'}
+               </span>
+            </div>
+         </div>
       </div>
     </div>
   );
