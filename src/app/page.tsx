@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { motion, AnimatePresence } from 'framer-motion';
 import GameCanvas from '@/components/GameCanvas';
 import BettingPanel from '@/components/BettingPanel';
 import { Menu, TrendingUp, History, Bell, Users, MessageCircle, Send, User } from 'lucide-react';
@@ -10,7 +11,7 @@ export default function Home() {
   const [multiplier, setMultiplier] = useState('1.00');
   const [status, setStatus] = useState<'WAITING' | 'STARTING' | 'IN_PROGRESS' | 'CRASHED'>('WAITING');
   const [nextRoundIn, setNextRoundIn] = useState(5000);
-  const [history, setHistory] = useState(['1.24', '3.57', '6.17', '3.25', '1.93', '10.63', '2.63', '9.54', '5.85', '2.87', '1.77', '2.68', '2.57', '43.35', '2.01', '1.24', '1.37', '31.90', '2.69', '1.49']);
+  const [history, setHistory] = useState(['1.24', '3.57', '21.17', '3.25', '1.93', '10.63', '2.63', '84.54', '5.85', '2.87', '1.77', '2.68', '2.57', '43.35', '2.01', '1.24', '1.37', '31.90', '2.69', '1.49']);
 
   useEffect(() => {
     const socketUrl = 'http://127.0.0.1:3006';
@@ -41,94 +42,103 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="h-screen bg-[#020202] text-[#ffffff] flex flex-col font-sans overflow-hidden">
+    <main className="h-screen bg-[#000000] text-[#ffffff] flex flex-col font-sans overflow-hidden">
       
-      {/* High-Contrast Header */}
-      <header className="h-20 px-10 flex items-center justify-between border-b border-white/10 bg-black z-50">
-        <div className="flex items-center gap-16">
-           <div className="flex items-center gap-4">
-              <div className="bg-red-600 p-2.5 rounded-2xl shadow-[0_0_40px_rgba(220,38,38,0.4)]">
-                 <TrendingUp size={24} className="text-white" />
+      {/* Mega Header: High Contrast & Scaled */}
+      <header className="h-24 px-12 flex items-center justify-between border-b border-white/10 bg-black z-50 shadow-2xl">
+        <div className="flex items-center gap-20">
+           <div className="flex items-center gap-6 group cursor-pointer">
+              <div className="bg-red-600 p-3.5 rounded-[1.5rem] shadow-[0_0_50px_rgba(255,0,0,0.5)] group-hover:scale-110 transition-transform">
+                 <TrendingUp size={32} className="text-white" />
               </div>
-              <h1 className="text-3xl font-black italic tracking-tighter uppercase whitespace-nowrap leading-none">
-                MAXI<span className="text-white/30">PESA</span>
+              <h1 className="text-5xl font-black italic tracking-tighter uppercase whitespace-nowrap leading-none">
+                MAXI<span className="text-white/20">PESA</span>
               </h1>
            </div>
            
-           <nav className="hidden xl:flex gap-10 items-center text-[12px] font-black uppercase tracking-[0.3em] text-white/40">
-              <a href="#" className="text-white border-b-2 border-red-600 pb-1">Aviator</a>
+           <nav className="hidden 2xl:flex gap-12 items-center text-[14px] font-black uppercase tracking-[0.4em] text-white/30">
+              <a href="#" className="text-white border-b-4 border-red-600 pb-2">Aviator</a>
               <a href="#" className="hover:text-white transition-colors">Provably Fair</a>
               <a href="#" className="hover:text-white transition-colors">Jackpots</a>
            </nav>
         </div>
 
-        <div className="flex items-center gap-6">
-           <div className="bg-[#0d0d0d] px-8 py-3.5 rounded-2xl border border-white/10 flex items-center gap-6 shadow-2xl">
+        <div className="flex items-center gap-10">
+           {/* Scaled Balance Widget */}
+           <div className="bg-[#0a0a0a] px-10 py-5 rounded-[2.5rem] border border-white/10 flex items-center gap-10 shadow-tactile">
               <div className="flex flex-col">
-                 <span className="text-[10px] font-black text-white/20 tracking-widest uppercase mb-0.5">Available Balance</span>
-                 <span className="text-base font-black text-white">1,250.00 KES</span>
+                 <span className="text-[11px] font-black text-white/20 tracking-widest uppercase mb-1">Total Balance</span>
+                 <span className="text-3xl font-black text-white leading-none">12,500.00 KES</span>
               </div>
-              <div className="h-8 w-[1px] bg-white/10" />
-              <button className="text-[12px] font-black text-red-600 uppercase tracking-widest hover:text-red-500 transition-all hover:scale-105">Deposit</button>
+              <div className="h-12 w-[1px] bg-white/20" />
+              <button className="text-[16px] font-black text-red-600 uppercase tracking-widest hover:text-red-500 transition-all hover:scale-110 active:scale-95">Deposit</button>
            </div>
            
-           <div className="bg-[#0d0d0d] p-3.5 rounded-2xl border border-white/10 text-white hover:bg-white/5 cursor-pointer transition-all"><Menu size={24} /></div>
+           <div className="bg-[#0a0a0a] p-5 rounded-[1.5rem] border border-white/10 text-white hover:bg-white/10 cursor-pointer transition-all shadow-lg">
+              <Menu size={32} />
+           </div>
         </div>
       </header>
 
-      {/* Main Grid: Global Layout */}
-      <div className="flex-1 flex overflow-hidden p-1 gap-1">
+      {/* Main Grid: Scaled Layout */}
+      <div className="flex-1 flex overflow-hidden p-2 gap-2">
         
-        {/* Left: Engagement Feed */}
-        <aside className="w-[400px] bg-[#0d0d0d] rounded-3xl border border-white/5 flex flex-col overflow-hidden shadow-2xl">
-          <div className="p-8 flex gap-12 text-[12px] font-black uppercase tracking-[0.2em] border-b border-white/5 bg-black/40">
-            <span className="text-white border-b-2 border-red-600 pb-8 -mb-[33px] cursor-pointer">Live Bets</span>
-            <span className="text-white/20 hover:text-white/40 cursor-pointer">Winners</span>
+        {/* Left: Enhanced Visibility Global Feed */}
+        <aside className="w-[480px] bg-[#0a0a0a] rounded-[3rem] border border-white/10 flex flex-col overflow-hidden shadow-2xl">
+          <div className="p-10 flex gap-16 text-[14px] font-black uppercase tracking-[0.3em] border-b border-white/5 bg-black/50">
+            <span className="text-white border-b-4 border-red-600 pb-10 -mb-[44px] cursor-pointer">Live Stream</span>
+            <span className="text-white/10 hover:text-white/30 cursor-pointer">Big Wins</span>
           </div>
           
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-black/10">
-             <div className="space-y-2">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-8 bg-black/20">
+             <div className="space-y-3">
                 {[...Array(20)].map((_, i) => (
-                   <div key={i} className="flex items-center justify-between p-4 rounded-3xl bg-white/[0.02] border border-white/[0.03] hover:bg-white/[0.05] transition-all">
-                      <div className="flex items-center gap-4">
-                         <div className="w-12 h-12 bg-zinc-800 rounded-2xl flex items-center justify-center text-white/40 font-black"><User size={24} /></div>
-                         <div className="flex flex-col">
-                            <span className="text-xs font-black text-white">Player_{Math.floor(Math.random() * 9999)}</span>
-                            <span className="text-[11px] font-bold text-white/20 uppercase tracking-widest">BET 500 KES</span>
+                   <motion.div 
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      key={i} 
+                      className="flex items-center justify-between p-6 rounded-[2rem] bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] transition-all"
+                   >
+                      <div className="flex items-center gap-5">
+                         <div className="w-14 h-14 bg-zinc-800 rounded-2xl flex items-center justify-center text-white/40"><User size={28} /></div>
+                         <div className="flex flex-col gap-1">
+                            <span className="text-base font-black text-white">Warrior_{Math.floor(Math.random() * 999)}</span>
+                            <span className="text-[12px] font-bold text-white/20 uppercase tracking-widest leading-none">BET 1,000 KES</span>
                          </div>
                       </div>
-                      <div className="text-right">
-                         <span className="text-xs font-black text-green-500 italic">+740.00</span>
+                      <div className="text-right flex flex-col items-end">
+                         <span className="text-lg font-black text-green-500 italic leading-none">+1,450</span>
+                         <span className="text-[10px] font-black text-green-500/30 uppercase">1.45x</span>
                       </div>
-                   </div>
+                   </motion.div>
                 ))}
              </div>
           </div>
         </aside>
 
-        {/* Center: High-Performance Arena */}
-        <div className="flex-1 flex flex-col gap-1 overflow-hidden">
+        {/* Center: High-Saturation Area */}
+        <div className="flex-1 flex flex-col gap-2 overflow-hidden">
            
-           {/* Multiplier History Strip (Narrative Enhancement) */}
-           <div className="h-16 bg-black/60 rounded-3xl border border-white/5 flex items-center px-8 gap-3 overflow-x-auto no-scrollbar justify-end">
-              <History size={16} className="text-white/20 mr-4" />
+           {/* Multiplier Narrative Bar: Scaled Pills */}
+           <div className="h-20 bg-black/70 rounded-[2.5rem] border border-white/10 flex items-center px-12 gap-4 overflow-x-auto no-scrollbar justify-end shadow-inner">
+              <History size={24} className="text-white/20 mr-6" />
               {history.map((val, i) => (
                  <motion.div 
-                    initial={{ scale: 0.8, opacity: 0 }}
+                    initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     key={i} 
-                    className={`px-6 py-2 rounded-full text-[11px] font-black italic tracking-widest border transition-all whitespace-nowrap
-                        ${parseFloat(val) < 2 ? 'bg-zinc-900/40 border-white/5 text-white/30' : 
-                          parseFloat(val) >= 10 ? 'bg-amber-500/20 text-amber-500 border-amber-500/30 text-glow-gold' : 
-                          'bg-green-500/20 text-green-500 border-green-500/30'}`}
+                    className={`px-8 py-3 rounded-full text-[14px] font-black italic tracking-widest border transition-all whitespace-nowrap shadow-xl
+                        ${parseFloat(val) < 2 ? 'bg-zinc-900 border-white/10 text-white/40' : 
+                          parseFloat(val) >= 10 ? 'bg-amber-400/20 text-amber-500 border-amber-400/50 text-glow-gold' : 
+                          'bg-green-500/20 text-green-500 border-green-500/50 text-glow-green'}`}
                  >
                     {val}x
                  </motion.div>
               ))}
            </div>
 
-           {/* Hero Canvas Area */}
-           <div className="flex-1 relative rounded-3xl overflow-hidden shadow-2xl">
+           {/* Central Stage */}
+           <div className="flex-1 relative rounded-[3rem] overflow-hidden shadow-tactile border border-white/5">
               <GameCanvas 
                  multiplier={multiplier} 
                  isCrashed={status === 'CRASHED'}
@@ -137,8 +147,8 @@ export default function Home() {
               />
            </div>
 
-           {/* Tactical Betting Controls */}
-           <div className="h-[340px]">
+           {/* Massive Control Station */}
+           <div className="h-[420px]">
               <BettingPanel 
                  gameState={status === 'IN_PROGRESS' || status === 'STARTING' ? 'FLYING' : status === 'CRASHED' ? 'CRASHED' : 'WAITING'} 
                  currentMultiplier={parseFloat(multiplier)} 
@@ -146,48 +156,48 @@ export default function Home() {
            </div>
         </div>
 
-        {/* Right: Social Sidebar */}
-        <aside className="w-[420px] bg-[#0d0d0d] rounded-3xl border border-white/5 flex flex-col overflow-hidden shadow-2xl">
-           <div className="p-8 flex items-center justify-between border-b border-white/5">
-              <div className="flex items-center gap-4">
-                 <div className="w-14 h-14 bg-red-600 rounded-3xl flex items-center justify-center font-black text-2xl shadow-2xl text-white">V</div>
-                 <div className="flex flex-col">
-                    <span className="text-sm font-black uppercase tracking-[0.2em] text-white">VIN_PESA</span>
-                    <div className="flex items-center gap-2">
-                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                       <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Live Operator</span>
+        {/* Right: Scaled Social Core */}
+        <aside className="w-[520px] bg-[#0a0a0a] rounded-[3rem] border border-white/10 flex flex-col overflow-hidden shadow-2xl">
+           <div className="p-10 flex items-center justify-between border-b border-white/10 bg-black/40">
+              <div className="flex items-center gap-6">
+                 <div className="w-16 h-16 bg-red-700 rounded-[1.5rem] flex items-center justify-center font-black text-3xl shadow-2xl text-white italic">V</div>
+                 <div className="flex flex-col gap-1">
+                    <span className="text-lg font-black uppercase tracking-[0.2em] text-white">OPERATOR_X</span>
+                    <div className="flex items-center gap-3">
+                       <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(0,255,34,0.6)]" />
+                       <span className="text-[12px] font-black text-green-500 uppercase tracking-widest italic">Encrypted Connection</span>
                     </div>
                  </div>
               </div>
-              <Users size={22} className="text-white/10" />
+              <Users size={28} className="text-white/10" />
            </div>
 
-           <div className="flex-1 overflow-y-auto custom-scrollbar p-8 bg-black/5 flex flex-col gap-6">
-              <div className="mt-auto space-y-6">
-                 <div className="flex flex-col items-start gap-2">
-                    <div className="bg-[#1a1a1b] px-6 py-4 rounded-[2rem] rounded-tl-none border border-white/5 text-sm text-white/70 max-w-[80%] leading-relaxed shadow-lg">
-                       Who's joining the next round? The multiplier rhythm is insane tonight! 🚀
+           <div className="flex-1 overflow-y-auto custom-scrollbar p-10 bg-black/10 flex flex-col gap-8">
+              <div className="mt-auto space-y-8">
+                 <div className="flex flex-col items-start gap-3">
+                    <div className="bg-[#151515] px-8 py-5 rounded-[2.5rem] rounded-tl-none border border-white/10 text-base text-white/80 max-w-[85%] leading-relaxed shadow-xl">
+                       New round starting in 5s! Don't miss the 10x rhythm today. 🌪️
                     </div>
-                    <span className="text-[9px] font-black text-white/20 uppercase tracking-widest ml-4">System • 20:30</span>
+                    <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] ml-6">Global Admin • Just Now</span>
                  </div>
                  
-                 <div className="flex flex-col items-end gap-2">
-                    <div className="bg-red-600/10 px-6 py-4 rounded-[2rem] rounded-tr-none border border-red-500/20 text-sm text-red-100 max-w-[80%] leading-relaxed shadow-lg">
-                       Ready to crash out at 15.00x! Let's go! 💰
+                 <div className="flex flex-col items-end gap-3">
+                    <div className="bg-red-600/10 px-8 py-5 rounded-[2.5rem] rounded-tr-none border border-red-500/30 text-base text-red-100 max-w-[85%] leading-relaxed shadow-xl border-t-white/10">
+                       My projected payout is looking CRAZY! 🤑
                     </div>
-                    <span className="text-[9px] font-black text-white/20 uppercase tracking-widest mr-4">You • 20:38</span>
+                    <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] mr-6">You • 20:51</span>
                  </div>
               </div>
            </div>
 
-           <div className="p-8 bg-black border-t border-white/5">
-              <div className="bg-[#1a1a1b] rounded-[1.5rem] p-4 flex items-center gap-4 border border-white/10 focus-within:border-white/30 transition-all shadow-inner">
+           <div className="p-10 bg-black border-t border-white/10">
+              <div className="bg-[#151515] rounded-[2rem] p-5 flex items-center gap-6 border border-white/10 focus-within:border-white/30 transition-all shadow-inner">
                  <input 
-                    placeholder="Message the tribe..."
-                    className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/20"
+                    placeholder="Enter the simulation chat..."
+                    className="flex-1 bg-transparent text-lg text-white outline-none placeholder:text-white/10 font-medium"
                  />
-                 <button className="bg-red-600 p-3 rounded-2xl text-white hover:bg-red-500 transition-all shadow-xl active:scale-90">
-                    <Send size={20} />
+                 <button className="bg-red-700 p-4 rounded-[1.5rem] text-white hover:bg-red-600 transition-all shadow-2xl active:scale-90">
+                    <Send size={24} />
                  </button>
               </div>
            </div>

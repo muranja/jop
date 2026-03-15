@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Minus, Plus, Zap, Ban } from 'lucide-react';
+import { useState } from 'react';
+import { Zap, TrendingUp, Ban } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 type GameState = 'WAITING' | 'FLYING' | 'CRASHED';
 
@@ -19,7 +20,7 @@ interface BettingPanelProps {
 
 export default function BettingPanel({ gameState, currentMultiplier }: BettingPanelProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-2 w-full h-full">
+    <div className="flex flex-col sm:flex-row gap-3 w-full h-full p-2">
       <SingleBetControl panelId="1" gameState={gameState} currentMultiplier={currentMultiplier} />
       <SingleBetControl panelId="2" gameState={gameState} currentMultiplier={currentMultiplier} />
     </div>
@@ -30,7 +31,7 @@ function SingleBetControl({ panelId, gameState, currentMultiplier }: { panelId: 
   const [bet, setBet] = useState<BetState>({
     isActive: false,
     isCashedOut: false,
-    betAmount: '10.00',
+    betAmount: '100.00',
     autoCashout: '2.00',
   });
 
@@ -53,104 +54,101 @@ function SingleBetControl({ panelId, gameState, currentMultiplier }: { panelId: 
   const isButtonEnabled = !(gameState === 'CRASHED' || (gameState === 'FLYING' && !bet.isActive) || bet.isCashedOut);
 
   return (
-    <div className={`flex-1 flex flex-col gap-4 p-6 rounded-[2.5rem] border transition-all duration-500
-      ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'bg-[#1a1a1b] border-green-500/50 shadow-[0_0_50px_rgba(34,197,94,0.1)]' : 'bg-[#111112] border-white/[0.03]'}
+    <div className={`flex-1 flex flex-col gap-6 p-8 rounded-[3.5rem] border transition-all duration-500 shadow-2xl
+      ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'bg-[#0d0d0d] border-green-500/80' : 'bg-[#080808] border-white/5'}
     `}>
-      <div className="flex gap-4 items-center">
-         <div className="flex-1 space-y-3">
-            {/* Input Wrapper */}
-            <div className="bg-black/60 rounded-3xl p-2 border border-white/5 flex items-center justify-between group focus-within:border-white/20 transition-all">
-               <div className="flex-1 flex flex-col pl-4">
-                  <span className="text-[10px] font-black text-white/20 uppercase tracking-widest italic">Bet Amount</span>
+      <div className="flex flex-col xl:flex-row gap-8 items-stretch h-full">
+         
+         {/* Left Side: Inputs and Presets (Enlarged) */}
+         <div className="flex-1 flex flex-col gap-6">
+            
+            {/* Massive Bet Amount Input */}
+            <div className="bg-black rounded-[2rem] p-4 border border-white/10 flex items-center justify-between focus-within:border-white/30 transition-all shadow-inner">
+               <div className="flex-1 flex flex-col pl-6">
+                  <span className="text-xs font-black text-white/30 uppercase tracking-[0.4em] italic mb-1">Set Your Bet</span>
                   <input 
                     type="number"
                     value={bet.betAmount}
                     disabled={bet.isActive}
                     onChange={(e) => setBet({...bet, betAmount: e.target.value})}
-                    className="bg-transparent text-white text-3xl font-black outline-none w-full disabled:opacity-40"
+                    className="bg-transparent text-white text-5xl font-black outline-none w-full disabled:opacity-30 leading-tight"
                   />
                </div>
-               <div className="flex flex-col gap-1 pr-1">
-                  <button onClick={() => modifyBet(2)} disabled={bet.isActive} className="w-10 h-7 bg-white/5 rounded-xl flex items-center justify-center text-[10px] font-bold hover:bg-white/10 disabled:opacity-0 transition-all">x2</button>
-                  <button onClick={() => modifyBet(0.5)} disabled={bet.isActive} className="w-10 h-7 bg-white/5 rounded-xl flex items-center justify-center text-[10px] font-bold hover:bg-white/10 disabled:opacity-0 transition-all">/2</button>
+               <div className="flex flex-col gap-2 pr-2">
+                  <button onClick={() => modifyBet(2)} disabled={bet.isActive} className="w-16 h-10 bg-white/5 rounded-2xl flex items-center justify-center text-xs font-black hover:bg-white/10 active:scale-90 transition-all">x2</button>
+                  <button onClick={() => modifyBet(0.5)} disabled={bet.isActive} className="w-16 h-10 bg-white/5 rounded-2xl flex items-center justify-center text-xs font-black hover:bg-white/10 active:scale-90 transition-all">/2</button>
                </div>
             </div>
 
-            {/* Presets */}
-            <div className="grid grid-cols-4 gap-2">
-               {[10, 50, 100, 500].map(val => (
+            {/* Enlarged Preset Grid */}
+            <div className="grid grid-cols-4 gap-3">
+               {[100, 200, 500, 1000].map(val => (
                  <button 
                   key={val}
                   disabled={bet.isActive}
                   onClick={() => setBet({...bet, betAmount: val.toFixed(2)})}
-                  className="py-3 bg-white/[0.02] border border-white/5 rounded-2xl text-[11px] font-black text-white/40 hover:text-white hover:bg-white/5 transition-all disabled:opacity-0"
+                  className="py-5 bg-white/[0.03] border border-white/5 rounded-[1.5rem] text-lg font-black text-white/50 hover:text-white hover:bg-white/10 transition-all disabled:opacity-0"
                  >
                    {val}
                  </button>
                ))}
             </div>
 
-            {/* Auto Cashout */}
-            <div className="flex items-center justify-between px-5 py-3 bg-black/40 rounded-2xl border border-white/5">
+            {/* Large Auto Cashout */}
+            <div className="flex items-center justify-between px-8 py-5 bg-black/80 rounded-[2rem] border border-white/10 mt-auto">
                <div className="flex flex-col">
-                  <span className="text-[9px] font-black text-white/20 uppercase italic tracking-widest">Auto Cashout</span>
+                  <span className="text-[10px] font-black text-white/30 uppercase italic tracking-[0.3em] mb-1">Auto Cashout</span>
                   <input 
                     type="number" 
                     step="0.01"
                     value={bet.autoCashout}
                     disabled={bet.isActive}
                     onChange={(e) => setBet({...bet, autoCashout: e.target.value})}
-                    className="bg-transparent text-green-500 font-black outline-none w-20 text-sm disabled:text-green-900" 
+                    className="bg-transparent text-green-500 text-2xl font-black outline-none w-24 disabled:text-green-900" 
                   />
                </div>
-               <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center">
-                  <Zap size={16} className={`transition-colors ${bet.isActive ? 'text-green-500' : 'text-white/20'}`} />
+               <div className="w-16 h-16 bg-white/5 rounded-[1.5rem] flex items-center justify-center border border-white/5">
+                  <Zap size={28} className={`transition-all duration-700 ${bet.isActive ? 'text-green-500 drop-shadow-[0_0_15px_rgba(0,255,34,0.6)]' : 'text-white/20'}`} />
                </div>
             </div>
          </div>
 
-         {/* Massive Action Button */}
-         <div className="flex-1 h-full">
+         {/* Right Side: Massive Psycho-Action Button */}
+         <div className="flex-1 min-h-[220px]">
             <button 
               onClick={handeBetAction}
               disabled={!isButtonEnabled}
-              className={`w-full h-full min-h-[180px] rounded-[2rem] flex flex-col items-center justify-center gap-2 transition-all duration-300 active:scale-95 group shadow-2xl relative overflow-hidden
-                ${!isButtonEnabled ? 'bg-zinc-900 grayscale opacity-40 cursor-not-allowed' : 
+              className={`w-full h-full rounded-[3rem] flex flex-col items-center justify-center gap-4 transition-all duration-300 transform active:scale-95 group shadow-[0_30px_60px_rgba(0,0,0,0.6)] relative overflow-hidden border-t border-white/20
+                ${!isButtonEnabled ? 'bg-[#151515] grayscale opacity-30 cursor-not-allowed' : 
                   gameState === 'WAITING' ? 
-                    (bet.isActive ? 'bg-red-600 hover:bg-red-500 shadow-[0_10px_40px_rgba(220,38,38,0.4)]' : 'bg-green-600 hover:bg-green-500 shadow-[0_10px_40px_rgba(34,197,94,0.4)]') :
+                    (bet.isActive ? 'bg-red-700 hover:bg-red-600 shadow-[0_20px_60px_rgba(255,0,0,0.4)]' : 'bg-green-600 hover:bg-green-500 shadow-[0_20px_60px_rgba(0,255,34,0.4)]') :
                   gameState === 'FLYING' ? 
-                    (bet.isActive && !bet.isCashedOut ? 'bg-green-500 animate-pulse text-black shadow-[0_0_60px_rgba(34,197,94,0.8)] scale-105' : 'bg-zinc-800 opacity-60') :
+                    (bet.isActive && !bet.isCashedOut ? 'bg-[#00ff22] animate-pulse text-black shadow-[0_0_100px_rgba(0,255,34,0.8)] scale-105 border-transparent' : 'bg-zinc-800 opacity-50') :
                   'bg-zinc-800'
                 }
               `}
             >
-               {/* Glossy Overlay */}
-               <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+               {/* Reflection/Plastic Finish */}
+               <div className="absolute top-0 left-0 w-full h-[60%] bg-gradient-to-b from-white/20 to-transparent pointer-events-none skew-x-[-15deg] translate-x-10 opacity-30" />
 
-               <span className={`text-4xl font-black italic tracking-tighter uppercase transition-colors 
-                  ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-white' : 'text-white'}
+               <span className={`text-6xl font-black italic tracking-tighter uppercase leading-none transition-transform group-hover:scale-110 drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)]
+                  ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-black' : 'text-white'}
                `}>
-                 {gameState === 'FLYING' && bet.isActive && !bet.isCashedOut ? 'CASH OUT' : 
-                  gameState === 'WAITING' ? (bet.isActive ? 'CANCEL' : 'BET') : 
-                  bet.isCashedOut ? 'WIN!' : 'WAITING'}
+                 {gameState === 'FLYING' && bet.isActive && !bet.isCashedOut ? 'CASH\nOUT' : 
+                  gameState === 'WAITING' ? (bet.isActive ? 'CANCEL' : 'PLACE\nBET') : 
+                  bet.isCashedOut ? 'YOU WON!' : 'ROUND IN\nPROGRESS'}
                </span>
 
-               <div className="flex flex-col items-center">
-                  <span className={`text-2xl font-black italic tracking-tighter ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-white' : 'text-white/40'}`}>
+               <div className="flex flex-col items-center gap-1">
+                  <span className={`text-5xl font-black italic tracking-tighter drop-shadow-lg leading-tight
+                     ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-black' : 'text-white/60'}
+                  `}>
                     {gameState === 'FLYING' && bet.isActive && !bet.isCashedOut ? currentWin : `${parseFloat(bet.betAmount).toFixed(0)} KES`}
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mt-1">Multiplayer</span>
+                  <span className={`text-[12px] font-black uppercase tracking-[0.5em] opacity-40 italic
+                     ${bet.isActive && gameState === 'FLYING' && !bet.isCashedOut ? 'text-black animate-bounce' : ''}
+                  `}>Multiplayer Value</span>
                </div>
-
-               {gameState === 'FLYING' && bet.isActive && !bet.isCashedOut && (
-                  <motion.div 
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1.2, opacity: 1 }}
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-xl"
-                  >
-                     <Zap size={20} className="text-green-600 fill-green-600" />
-                  </motion.div>
-               )}
             </button>
          </div>
       </div>

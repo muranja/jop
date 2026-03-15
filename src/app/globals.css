@@ -1,27 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@700;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Backgrounds: Deep, immersive dark tones */
-  --bg-base: #020202; 
-  --bg-panel: #0d0d0d; 
+  /* Ultra-Deep Backgrounds for maximum color pop */
+  --bg-base: #000000; 
+  --bg-panel: #0a0a0a; 
   
-  /* Action Colors: Win/Go signals */
-  --action-green: #00ff66; /* Neon high-visibility green */
-  --action-green-glow: rgba(0, 255, 102, 0.4);
+  /* Pschologically Saturated Action Colors */
+  --action-green: #00ff22; /* Maximum saturation lime green (Profit) */
+  --action-green-glow: rgba(0, 255, 34, 0.6);
 
-  /* Tension Colors: Danger/Crash signals */
-  --danger-red: #ff0033; 
-  --danger-red-glow: rgba(255, 0, 51, 0.4);
+  --danger-red: #ff0000; /* Pure intense red (Urgency/Loss) */
+  --danger-red-glow: rgba(255, 0, 0, 0.6);
 
-  /* Typography & Accents */
+  --accent-gold: #ffc400; /* Rich gold (Jackpot/High Value) */
+  --accent-gold-glow: rgba(255, 196, 0, 0.6);
+
+  /* Typography */
   --text-main: #ffffff;
   --text-muted: #888888;
-  --accent-gold: #ffcc00; 
-  --accent-gold-glow: rgba(255, 204, 0, 0.4);
 }
 
 body {
@@ -29,40 +29,59 @@ body {
   color: var(--text-main);
   font-family: 'Inter', -apple-system, sans-serif;
   overflow: hidden;
+  /* Scale up global baseline */
+  font-size: 18px; 
 }
 
 .font-heading {
   font-family: 'Space Grotesk', sans-serif;
+  font-weight: 900;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
 }
 
 @layer utilities {
   .text-glow-green {
-    text-shadow: 0 0 20px var(--action-green-glow);
+    text-shadow: 0 0 30px var(--action-green-glow);
   }
   .text-glow-red {
-    text-shadow: 0 0 20px var(--danger-red-glow);
+    text-shadow: 0 0 30px var(--danger-red-glow);
   }
   .text-glow-gold {
-    text-shadow: 0 0 20px var(--accent-gold-glow);
+    text-shadow: 0 0 30px var(--accent-gold-glow);
+  }
+  
+  /* High-Impact "Chunky" Shadow */
+  .shadow-tactile {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   }
 }
 
 @keyframes pan-bg {
   from { background-position: 0 0; }
-  to { background-position: -100px 100px; }
+  to { background-position: -200px 200px; }
 }
 
 .animate-pan-bg {
-  animation: pan-bg 5s linear infinite;
+  animation: pan-bg 3s linear infinite;
+}
+
+/* Make everything feel larger and more accessible */
+input[type="number"] {
+  font-size: 1.5rem;
+}
+button {
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+button:active {
+  transform: scale(0.92);
 }
